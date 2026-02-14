@@ -10,89 +10,101 @@
             --bg: #FDFBFB; --rosa: #FFD1DC; --lavanda: #E6E6FA;
             --menta: #C8E6C9; --azzurro: #B3E5FC; --text: #5D5D5D;
         }
-        body { font-family: 'Quicksand', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; padding-bottom: 100px; }
+        body { font-family: 'Quicksand', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; padding-bottom: 100px; -webkit-user-select: none; }
         
         .header-nav { display: flex; align-items: center; margin-bottom: 20px; justify-content: space-between; }
-        .back-btn { background: var(--lavanda); border: none; font-size: 1.2rem; padding: 10px 15px; border-radius: 15px; cursor: pointer; }
+        .back-btn { background: var(--lavanda); border: none; font-size: 1.2rem; padding: 10px 18px; border-radius: 20px; cursor: pointer; }
         
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .card { 
-            background: white; border-radius: 28px; padding: 20px 10px; 
+            background: white; border-radius: 28px; padding: 25px 10px; 
             box-shadow: 0 8px 15px rgba(0,0,0,0.04); text-align: center;
             transition: 0.2s; border: none; position: relative;
         }
+        .card:active { transform: scale(0.95); }
         .card-conto { background: var(--azzurro); }
         .card-macro { background: var(--lavanda); }
         .card-cat { background: var(--rosa); }
 
-        .btn-edit { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.5); border: none; border-radius: 50%; width: 25px; height: 25px; font-size: 12px; }
+        .btn-edit-icon { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.6); border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 14px; display: flex; align-items: center; justify-content: center; }
 
         .title { font-weight: 700; font-size: 1rem; display: block; margin-top: 5px; }
-        .balance { font-size: 0.9rem; margin-top: 8px; font-weight: bold; background: rgba(255,255,255,0.4); border-radius: 10px; padding: 2px 8px; display: inline-block; }
+        .balance { font-size: 0.95rem; margin-top: 8px; font-weight: bold; background: rgba(255,255,255,0.4); border-radius: 12px; padding: 4px 10px; display: inline-block; }
 
-        .modal {
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-            align-items: center; justify-content: center; z-index: 200; backdrop-filter: blur(5px);
-        }
-        .modal-content { background: white; width: 85%; padding: 25px; border-radius: 30px; text-align: center; }
-        input, select { width: 100%; padding: 15px; margin: 10px 0; border-radius: 15px; border: 1px solid #eee; font-family: inherit; box-sizing: border-box; }
+        /* MODALI */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 2000; backdrop-filter: blur(5px); }
+        .modal-content { background: white; width: 85%; padding: 25px; border-radius: 30px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
         
-        .btn-main { background: var(--menta); color: white; border: none; padding: 15px; width: 100%; border-radius: 15px; font-weight: 700; margin-top: 10px; }
-        .btn-delete { background: #ffb3b3; color: white; border: none; padding: 10px; width: 100%; border-radius: 15px; margin-top: 10px; }
+        input, select { width: 100%; padding: 16px; margin: 10px 0; border-radius: 18px; border: 1px solid #eee; font-family: inherit; font-size: 1rem; box-sizing: border-box; outline: none; }
+        
+        .btn-main { background: var(--menta); color: white; border: none; padding: 16px; width: 100%; border-radius: 18px; font-weight: 700; font-size: 1rem; margin-top: 10px; }
+        .btn-sec { background: var(--azzurro); color: var(--text); border: none; padding: 16px; width: 100%; border-radius: 18px; font-weight: 700; margin-top: 10px; }
+        .btn-delete { background: #ffb3b3; color: white; border: none; padding: 12px; width: 100%; border-radius: 18px; margin-top: 20px; font-weight: bold; }
 
-        .fab { position: fixed; bottom: 30px; right: 25px; width: 65px; height: 65px; background: var(--menta); border-radius: 50%; border: none; color: white; font-size: 35px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); z-index: 10; }
+        .fab { position: fixed; bottom: 30px; right: 25px; width: 70px; height: 70px; background: var(--menta); border-radius: 50%; border: none; color: white; font-size: 40px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 1000; }
     </style>
 </head>
 <body>
 
-<div id="login-screen" style="position:fixed; inset:0; background:var(--rosa); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:1000;">
-    <h1 style="color:white">My Cash 🌸</h1>
-    <input type="password" id="pw" placeholder="Password (12345)" style="width:60%">
-    <button onclick="login()" class="btn-main" style="width:40%">Entra</button>
+<div id="login-screen" style="position:fixed; inset:0; background:var(--rosa); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:9999;">
+    <h1 style="color:white; font-size: 2.2rem; margin-bottom: 30px;">My Cash 🌸</h1>
+    <input type="password" id="pw" placeholder="Password (12345)" style="width:70%; text-align: center;">
+    <button onclick="login()" class="btn-main" style="width:50%; background: white; color: var(--text);">Entra</button>
 </div>
 
 <div id="app" style="display:none;">
     <div class="header-nav">
         <button id="back-btn" class="back-btn" onclick="goBack()" style="visibility:hidden;">←</button>
-        <span id="path-label" style="font-size:0.8rem; opacity:0.5">Home</span>
+        <span id="path-label" style="font-size:0.9rem; font-weight: bold; opacity:0.6">Home</span>
     </div>
-    <h2 id="view-title">I tuoi Conti</h2>
+    <h2 id="view-title" style="margin-left: 5px;">I tuoi Conti</h2>
     <div id="main-grid" class="grid"></div>
     <button class="fab" onclick="showActionSheet()">+</button>
 </div>
 
 <div id="modal-actions" class="modal" onclick="closeModals()">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h3>Cosa vuoi fare?</h3>
+        <h3 style="margin-bottom: 20px;">Nuova Voce</h3>
         <button class="btn-main" onclick="openTransactionModal()">💸 Segna Spesa/Entrata</button>
-        <hr>
-        <button class="btn-main" style="background:var(--azzurro)" onclick="openCreate('conto')">Conto</button>
-        <button class="btn-main" style="background:var(--lavanda)" onclick="openCreate('macro')">Macrocategoria</button>
-        <button class="btn-main" style="background:var(--rosa)" onclick="openCreate('cat')">Categoria</button>
+        <div style="margin: 20px 0; height: 1px; background: #eee;"></div>
+        <button class="btn-sec" onclick="openEditor('conto')">Nuovo Conto</button>
+        <button class="btn-sec" onclick="openEditor('macro')">Nuova Macrocategoria</button>
+        <button class="btn-sec" onclick="openEditor('cat')">Nuova Categoria</button>
     </div>
 </div>
 
-<div id="modal-edit" class="modal" onclick="closeModals()">
+<div id="modal-editor" class="modal" onclick="closeModals()">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h3 id="edit-title">Nuovo</h3>
+        <h3 id="edit-title">Modifica</h3>
         <input type="text" id="edit-name" placeholder="Nome...">
-        
-        <div id="extra-fields"></div>
-
+        <div id="cat-extra-fields" style="display:none;">
+            <select id="select-conto"></select>
+            <select id="select-macro"></select>
+        </div>
         <button class="btn-main" onclick="saveData()">Salva</button>
-        <button id="del-btn" class="btn-delete" onclick="deleteItem()" style="display:none;">Elimina Definitivamente</button>
+        <button id="del-btn" class="btn-delete" onclick="deleteItem()">Elimina</button>
+        <button onclick="closeModals()" style="background:none; border:none; margin-top:15px; color:#aaa;">Annulla</button>
+    </div>
+</div>
+
+<div id="modal-transaction" class="modal" onclick="closeModals()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h3>Nuova Spesa</h3>
+        <input type="number" id="tr-amount" placeholder="Importo (es: -25.50)">
+        <input type="text" id="tr-desc" placeholder="Descrizione">
+        <select id="tr-select-cat"></select>
+        <button class="btn-main" onclick="saveTransaction()">Salva Transazione</button>
+        <button onclick="closeModals()" style="background:none; border:none; margin-top:15px; color:#aaa;">Chiudi</button>
     </div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('myCashDB')) || {
-        conti: [], macros: [], categories: [], transactions: []
-    };
+    let db = JSON.parse(localStorage.getItem('myCashDB')) || { conti: [], macros: [], categories: [], transactions: [] };
 
-    let currentView = 'conti'; // conti, macros, categories
-    let selConto = null;
-    let selMacro = null;
-    let editingItem = null; // {type, id}
+    let view = 'conti'; 
+    let selC = null;
+    let selM = null;
+    let activeEdit = null; // {type, id}
 
     function login() {
         if(document.getElementById('pw').value === '12345') {
@@ -102,10 +114,9 @@
         }
     }
 
-    // --- CALCOLI ---
-    const getCatBal = (id) => db.transactions.filter(t => t.catId === id).reduce((s, t) => s + t.amount, 0);
-    const getMacBal = (mId, cId) => db.categories.filter(c => c.macroId === mId && c.contoId === cId).reduce((s, c) => s + getCatBal(c.id), 0);
-    const getConBal = (cId) => db.categories.filter(c => c.contoId === cId).reduce((s, c) => s + getCatBal(c.id), 0);
+    const getCatBal = (id) => db.transactions.filter(t => t.catId == id).reduce((s, t) => s + t.amount, 0);
+    const getMacBal = (mId, cId) => db.categories.filter(c => c.macroId == mId && c.contoId == cId).reduce((s, c) => s + getCatBal(c.id), 0);
+    const getConBal = (cId) => db.categories.filter(c => c.contoId == cId).reduce((s, c) => s + getCatBal(c.id), 0);
 
     function render() {
         const grid = document.getElementById('main-grid');
@@ -114,37 +125,37 @@
         const path = document.getElementById('path-label');
         grid.innerHTML = '';
 
-        if(currentView === 'conti') {
+        if(view === 'conti') {
             title.innerText = "I tuoi Conti";
             backBtn.style.visibility = 'hidden';
             path.innerText = "Home";
             db.conti.forEach(c => {
-                grid.innerHTML += `<div class="card card-conto" onclick="goMacros(${c.id})">
-                    <button class="btn-edit" onclick="event.stopPropagation(); openEdit('conto', ${c.id})">✎</button>
+                grid.innerHTML += `<div class="card card-conto" onclick="goM(${c.id})">
+                    <button class="btn-edit-icon" onclick="event.stopPropagation(); openEditor('conto', ${c.id})">✎</button>
                     <span class="title">${c.nome}</span>
                     <div class="balance">€ ${getConBal(c.id).toFixed(2)}</div>
                 </div>`;
             });
         } 
-        else if(currentView === 'macros') {
+        else if(view === 'macros') {
             title.innerText = "Macrocategorie";
             backBtn.style.visibility = 'visible';
-            path.innerText = db.conti.find(c => c.id === selConto).nome;
+            path.innerText = db.conti.find(c => c.id == selC).nome;
             db.macros.forEach(m => {
-                grid.innerHTML += `<div class="card card-macro" onclick="goCats(${m.id})">
-                    <button class="btn-edit" onclick="event.stopPropagation(); openEdit('macro', ${m.id})">✎</button>
+                grid.innerHTML += `<div class="card card-macro" onclick="goC(${m.id})">
+                    <button class="btn-edit-icon" onclick="event.stopPropagation(); openEditor('macro', ${m.id})">✎</button>
                     <span class="title">${m.nome}</span>
-                    <div class="balance">€ ${getMacBal(m.id, selConto).toFixed(2)}</div>
+                    <div class="balance">€ ${getMacBal(m.id, selC).toFixed(2)}</div>
                 </div>`;
             });
         }
-        else if(currentView === 'categories') {
+        else if(view === 'categories') {
             title.innerText = "Sottocategorie";
             backBtn.style.visibility = 'visible';
-            path.innerText = db.macros.find(m => m.id === selMacro).nome;
-            db.categories.filter(c => c.contoId === selConto && c.macroId === selMacro).forEach(c => {
+            path.innerText = db.macros.find(m => m.id == selM).nome;
+            db.categories.filter(c => c.contoId == selC && c.macroId == selM).forEach(c => {
                 grid.innerHTML += `<div class="card card-cat">
-                    <button class="btn-edit" onclick="event.stopPropagation(); openEdit('cat', ${c.id})">✎</button>
+                    <button class="btn-edit-icon" onclick="event.stopPropagation(); openEditor('cat', ${c.id})">✎</button>
                     <span class="title">${c.nome}</span>
                     <div class="balance">€ ${getCatBal(c.id).toFixed(2)}</div>
                 </div>`;
@@ -153,99 +164,101 @@
         localStorage.setItem('myCashDB', JSON.stringify(db));
     }
 
-    // --- NAVIGAZIONE ---
-    function goMacros(id) { selConto = id; currentView = 'macros'; render(); }
-    function goCats(id) { selMacro = id; currentView = 'categories'; render(); }
-    function goBack() {
-        if(currentView === 'categories') currentView = 'macros';
-        else if(currentView === 'macros') currentView = 'conti';
-        render();
-    }
+    function goM(id) { selC = id; view = 'macros'; render(); }
+    function goC(id) { selM = id; view = 'categories'; render(); }
+    function goBack() { view = (view === 'categories') ? 'macros' : 'conti'; render(); }
 
-    // --- AZIONI ---
     function showActionSheet() { document.getElementById('modal-actions').style.display = 'flex'; }
     function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
 
-    function openCreate(type) {
-        editingItem = { type, id: null };
-        setupEditModal(type, "Nuovo " + type);
-    }
-
-    function openEdit(type, id) {
-        editingItem = { type, id };
-        let item = db[type === 'cat' ? 'categories' : type + 's'].find(x => x.id === id);
-        setupEditModal(type, "Modifica", item.nome);
-        document.getElementById('del-btn').style.display = 'block';
-    }
-
-    function setupEditModal(type, title, name = "") {
+    // --- EDITOR LOGIC ---
+    function openEditor(type, id = null) {
+        activeEdit = { type, id };
         closeModals();
-        document.getElementById('edit-title').innerText = title;
+        document.getElementById('edit-title').innerText = id ? "Modifica " + type : "Nuovo " + type;
+        document.getElementById('del-btn').style.display = id ? 'block' : 'none';
+        document.getElementById('cat-extra-fields').style.display = (type === 'cat') ? 'block' : 'none';
+        
+        let name = "";
+        if(id) {
+            let list = (type === 'cat') ? db.categories : db[type + 's'];
+            name = list.find(x => x.id == id).nome;
+        }
         document.getElementById('edit-name').value = name;
-        document.getElementById('del-btn').style.display = 'none';
-        const extra = document.getElementById('extra-fields');
-        extra.innerHTML = '';
 
         if(type === 'cat') {
-            let optionsConto = db.conti.map(c => `<option value="${c.id}" ${c.id==selConto?'selected':''}>${c.nome}</option>`).join('');
-            let optionsMacro = db.macros.map(m => `<option value="${m.id}" ${m.id==selMacro?'selected':''}>${m.nome}</option>`).join('');
-            extra.innerHTML = `<select id="cat-conto">${optionsConto}</select><select id="cat-macro">${optionsMacro}</select>`;
+            const sc = document.getElementById('select-conto');
+            const sm = document.getElementById('select-macro');
+            sc.innerHTML = db.conti.map(c => `<option value="${c.id}" ${c.id==selC?'selected':''}>${c.nome}</option>`).join('');
+            sm.innerHTML = db.macros.map(m => `<option value="${m.id}" ${m.id==selM?'selected':''}>${m.nome}</option>`).join('');
         }
-        document.getElementById('modal-edit').style.display = 'flex';
+        document.getElementById('modal-editor').style.display = 'flex';
     }
 
     function saveData() {
         const name = document.getElementById('edit-name').value;
-        const type = editingItem.type;
-        const id = editingItem.id || Date.now();
+        if(!name) return;
+        const {type, id} = activeEdit;
 
-        let list = (type === 'cat') ? db.categories : db[type + 's'];
-        
-        if(editingItem.id) {
-            let obj = list.find(x => x.id === id);
-            obj.nome = name;
-            if(type === 'cat') { 
-                obj.contoId = parseInt(document.getElementById('cat-conto').value);
-                obj.macroId = parseInt(document.getElementById('cat-macro').value);
-            }
-        } else {
-            let newItem = { id, nome: name };
+        if(id) { // Modifica
+            let list = (type === 'cat') ? db.categories : db[type + 's'];
+            let item = list.find(x => x.id == id);
+            item.nome = name;
             if(type === 'cat') {
-                newItem.contoId = parseInt(document.getElementById('cat-conto').value);
-                newItem.macroId = parseInt(document.getElementById('cat-macro').value);
+                item.contoId = parseInt(document.getElementById('select-conto').value);
+                item.macroId = parseInt(document.getElementById('select-macro').value);
             }
-            list.push(newItem);
+        } else { // Nuovo
+            const newId = Date.now();
+            if(type === 'conto') db.conti.push({id: newId, nome: name});
+            else if(type === 'macro') db.macros.push({id: newId, nome: name});
+            else if(type === 'cat') {
+                db.categories.push({
+                    id: newId, nome: name, 
+                    contoId: parseInt(document.getElementById('select-conto').value),
+                    macroId: parseInt(document.getElementById('select-macro').value)
+                });
+            }
         }
         closeModals(); render();
     }
 
     function deleteItem() {
-        if(!confirm("Sei sicuro? Cancellerai anche tutto ciò che contiene!")) return;
-        const {type, id} = editingItem;
+        if(!confirm("Cancellare definitivamente?")) return;
+        const {type, id} = activeEdit;
         if(type === 'conto') {
-            db.conti = db.conti.filter(c => c.id !== id);
-            db.categories = db.categories.filter(c => c.contoId !== id);
+            db.conti = db.conti.filter(x => x.id != id);
+            db.categories = db.categories.filter(x => x.contoId != id);
         } else if(type === 'macro') {
-            db.macros = db.macros.filter(m => m.id !== id);
-            db.categories = db.categories.filter(c => c.macroId !== id);
+            db.macros = db.macros.filter(x => x.id != id);
+            db.categories = db.categories.filter(x => x.macroId != id);
         } else {
-            db.categories = db.categories.filter(c => c.id !== id);
+            db.categories = db.categories.filter(x => x.id != id);
         }
         closeModals(); render();
     }
 
+    // --- TRANSACTIONS ---
     function openTransactionModal() {
         closeModals();
-        let amount = prompt("Importo (usa - per le spese):");
-        if(!amount) return;
-        let desc = prompt("Descrizione:");
-        let catOptions = db.categories.map(c => `<option value="${c.id}">${db.conti.find(co=>co.id==c.contoId).nome} > ${c.nome}</option>`).join('');
+        if(db.categories.length === 0) return alert("Crea prima una categoria!");
+        const select = document.getElementById('tr-select-cat');
+        select.innerHTML = db.categories.map(c => {
+            const cNome = db.conti.find(co => co.id == c.contoId).nome;
+            return `<option value="${c.id}">${cNome} > ${c.nome}</option>`;
+        }).join('');
+        document.getElementById('modal-transaction').style.display = 'flex';
+    }
+
+    function saveTransaction() {
+        const amount = parseFloat(document.getElementById('tr-amount').value);
+        const catId = parseInt(document.getElementById('tr-select-cat').value);
+        if(!amount) return alert("Inserisci l'importo!");
         
-        // Per semplicità usiamo un prompt/confirm rapido o iniettiamo un mini-form
-        let catId = prompt("Seleziona ID Categoria (o scusa, preferisci il menu?)"); 
-        // Nota: Qui per brevità ho usato prompt, ma la logica 'saveTransaction' del codice precedente è integrabile.
-        db.transactions.push({id: Date.now(), amount: parseFloat(amount), desc, catId: parseInt(db.categories[0].id), date: new Date()});
-        render();
+        db.transactions.push({ id: Date.now(), amount, catId, desc: document.getElementById('tr-desc').value, date: new Date() });
+        document.getElementById('tr-amount').value = '';
+        document.getElementById('tr-desc').value = '';
+        closeModals(); render();
     }
 </script>
 </body>

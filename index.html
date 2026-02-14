@@ -19,7 +19,7 @@
         .card { 
             background: white; border-radius: 28px; padding: 25px 15px; 
             box-shadow: 0 8px 15px rgba(0,0,0,0.04); text-align: center;
-            transition: 0.2s; border: none; position: relative;
+            transition: 0.2s; border: none;
         }
         .card:active { transform: scale(0.95); }
         .card-conto { background: var(--azzurro); }
@@ -27,20 +27,21 @@
         .card-cat { background: var(--rosa); }
 
         .title { font-weight: 700; font-size: 1.1rem; display: block; }
-        .balance { font-size: 1rem; margin-top: 8px; font-weight: bold; background: rgba(255,255,255,0.5); border-radius: 10px; padding: 2px 8px; }
+        .balance { font-size: 1rem; margin-top: 8px; font-weight: bold; background: rgba(255,255,255,0.4); border-radius: 10px; padding: 2px 8px; display: inline-block; }
 
-        /* Modal per inserimento spesa */
-        #modal-transazione {
+        /* Modali */
+        .modal {
             display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-            align-items: center; justify-content: center; z-index: 200;
+            align-items: center; justify-content: center; z-index: 200; backdrop-filter: blur(5px);
         }
         .modal-content { 
             background: white; width: 85%; padding: 25px; border-radius: 30px; 
             text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
-        input, select { width: 100%; padding: 15px; margin: 10px 0; border-radius: 15px; border: 1px solid #eee; font-family: inherit; box-sizing: border-box; }
+        input, select { width: 100%; padding: 15px; margin: 10px 0; border-radius: 15px; border: 1px solid #eee; font-family: inherit; font-size: 1rem; box-sizing: border-box; }
         
-        .btn-confirm { background: var(--menta); color: white; border: none; padding: 15px; width: 100%; border-radius: 15px; font-weight: 700; font-size: 1rem; }
+        .btn-main { background: var(--menta); color: white; border: none; padding: 15px; width: 100%; border-radius: 15px; font-weight: 700; margin-top: 10px; }
+        .btn-sec { background: var(--azzurro); color: var(--text); border: none; padding: 15px; width: 100%; border-radius: 15px; font-weight: 700; margin-top: 10px; }
 
         .fab { 
             position: fixed; bottom: 30px; right: 25px; width: 65px; height: 65px; 
@@ -54,50 +55,59 @@
 <body>
 
 <div id="login-screen">
-    <h1 style="color: white; font-size: 2.5rem;">My Cash 🌸</h1>
-    <input type="password" id="pw" placeholder="Password (12345)" style="width: 60%">
-    <button onclick="login()" style="padding: 15px 40px; border-radius: 20px; border: none; font-weight: 700;">Entra</button>
+    <h1 style="color: white; font-size: 2.2rem;">My Cash Stuffing 🌸</h1>
+    <input type="password" id="pw" placeholder="Password (12345)" style="width: 70%">
+    <button onclick="login()" class="btn-main" style="width: 50%">Entra</button>
 </div>
 
 <div id="app" style="display:none;">
     <div class="header-nav">
-        <button id="back-btn" class="back-btn" onclick="goBack()" style="visibility: hidden;">← Torna</button>
-        <span id="total-view" style="font-weight: bold; font-size: 1.2rem;"></span>
+        <button id="back-btn" class="back-btn" onclick="goBack()" style="visibility: hidden;">←</button>
+        <div id="bread-crumb" style="font-size: 0.8rem; opacity: 0.6;">Home</div>
     </div>
 
-    <h2 id="view-title" style="margin-bottom: 20px;">I tuoi Conti</h2>
+    <h2 id="view-title">I tuoi Conti</h2>
     <div id="main-grid" class="grid"></div>
     
-    <button class="fab" onclick="openModal()">+</button>
+    <button class="fab" onclick="showActionSheet()">+</button>
 </div>
 
-<div id="modal-transazione">
-    <div class="modal-content">
-        <h3 id="modal-title">Nuova Transazione</h3>
-        <input type="number" id="tr-amount" placeholder="Importo (es: -20 o 50)">
-        <input type="text" id="tr-desc" placeholder="Descrizione (es: Spesa)">
-        
-        <div id="select-area">
-            <label>Seleziona Categoria:</label>
-            <select id="tr-category"></select>
-        </div>
+<div id="modal-actions" class="modal" onclick="closeModals(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h3 id="action-title">Cosa vuoi fare?</h3>
+        <button class="btn-main" onclick="openTransactionModal()">💸 Inserisci Spesa/Entrata</button>
+        <button class="btn-sec" onclick="openCreateModal()" id="btn-create-label">➕ Crea Nuovo Conto</button>
+        <button onclick="closeModals()" style="background:none; border:none; margin-top:15px; color:#aaa;">Chiudi</button>
+    </div>
+</div>
 
-        <button class="btn-confirm" onclick="saveTransaction()">Salva</button>
-        <button onclick="closeModal()" style="background: none; border: none; margin-top: 15px; color: #aaa;">Annulla</button>
+<div id="modal-create" class="modal" onclick="closeModals(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h3 id="create-title">Nuovo</h3>
+        <input type="text" id="new-name" placeholder="Nome (es: Revolut, Auto, Benzina...)">
+        <button class="btn-main" onclick="saveNewItem()">Salva</button>
+    </div>
+</div>
+
+<div id="modal-transazione" class="modal" onclick="closeModals(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h3>Nuova Operazione</h3>
+        <input type="number" id="tr-amount" placeholder="Importo (es: -20 o 50)">
+        <input type="text" id="tr-desc" placeholder="Descrizione">
+        <label style="font-size: 0.8rem; display: block; margin-top: 10px;">Categoria di destinazione:</label>
+        <select id="tr-category"></select>
+        <button class="btn-main" onclick="saveTransaction()">Conferma</button>
     </div>
 </div>
 
 <script>
     let db = JSON.parse(localStorage.getItem('myCashDB')) || {
-        conti: [{id: 1, nome: "Conto Principale"}],
-        macros: [{id: 1, nome: "Casa", contoId: 1}],
-        categories: [{id: 1, nome: "Spesa", macroId: 1}],
-        transactions: [] // Ogni transazione: {id, catId, desc, amount, date}
+        conti: [], macros: [], categories: [], transactions: []
     };
 
     let currentView = 'conti';
-    let selectedConto = null;
-    let selectedMacro = null;
+    let selectedContoId = null;
+    let selectedMacroId = null;
 
     function login() {
         if(document.getElementById('pw').value === '12345') {
@@ -107,101 +117,108 @@
         }
     }
 
-    // Funzione per calcolare il saldo di una categoria
-    function getCatBalance(catId) {
-        return db.transactions
-            .filter(t => t.catId === catId)
-            .reduce((sum, t) => sum + t.amount, 0);
-    }
-
-    // Funzione per calcolare il saldo di una macro
-    function getMacroBalance(macroId) {
-        return db.categories
-            .filter(c => c.macroId === macroId)
-            .reduce((sum, c) => sum + getCatBalance(c.id), 0);
-    }
-
-    // Funzione per calcolare il saldo di un conto
-    function getContoBalance(contoId) {
-        return db.macros
-            .filter(m => m.contoId === contoId)
-            .reduce((sum, m) => sum + getMacroBalance(m.id), 0);
-    }
+    // --- LOGICA CALCOLI ---
+    const getCatBal = (id) => db.transactions.filter(t => t.catId === id).reduce((s, t) => s + t.amount, 0);
+    const getMacBal = (id) => db.categories.filter(c => c.macroId === id).reduce((s, c) => s + getCatBal(c.id), 0);
+    const getConBal = (id) => db.macros.filter(m => m.contoId === id).reduce((s, m) => s + getMacBal(m.id), 0);
 
     function render() {
         const grid = document.getElementById('main-grid');
         const title = document.getElementById('view-title');
         const backBtn = document.getElementById('back-btn');
+        const bread = document.getElementById('bread-crumb');
         grid.innerHTML = '';
 
         if(currentView === 'conti') {
             title.innerText = "I tuoi Conti";
             backBtn.style.visibility = 'hidden';
+            bread.innerText = "Home";
             db.conti.forEach(c => {
-                const bal = getContoBalance(c.id);
-                grid.innerHTML += `<div class="card card-conto" onclick="openConto(${c.id})"><span class="title">${c.nome}</span><div class="balance">€ ${bal.toFixed(2)}</div></div>`;
+                grid.innerHTML += `<div class="card card-conto" onclick="openConto(${c.id})"><span class="title">${c.nome}</span><div class="balance">€ ${getConBal(c.id).toFixed(2)}</div></div>`;
             });
         } 
         else if(currentView === 'macros') {
             title.innerText = "Macrocategorie";
             backBtn.style.visibility = 'visible';
-            db.macros.filter(m => m.contoId === selectedConto).forEach(m => {
-                const bal = getMacroBalance(m.id);
-                grid.innerHTML += `<div class="card card-macro" onclick="openMacro(${m.id})"><span class="title">${m.nome}</span><div class="balance">€ ${bal.toFixed(2)}</div></div>`;
+            let cNome = db.conti.find(c => c.id === selectedContoId).nome;
+            bread.innerText = cNome;
+            db.macros.filter(m => m.contoId === selectedContoId).forEach(m => {
+                grid.innerHTML += `<div class="card card-macro" onclick="openMacro(${m.id})"><span class="title">${m.nome}</span><div class="balance">€ ${getMacBal(m.id).toFixed(2)}</div></div>`;
             });
         }
         else if(currentView === 'categories') {
             title.innerText = "Categorie";
             backBtn.style.visibility = 'visible';
-            db.categories.filter(cat => cat.macroId === selectedMacro).forEach(cat => {
-                const bal = getCatBalance(cat.id);
-                grid.innerHTML += `<div class="card card-cat"><span class="title">${cat.nome}</span><div class="balance">€ ${bal.toFixed(2)}</div></div>`;
+            let mNome = db.macros.find(m => m.id === selectedMacroId).nome;
+            bread.innerText = mNome;
+            db.categories.filter(cat => cat.macroId === selectedMacroId).forEach(cat => {
+                grid.innerHTML += `<div class="card card-cat"><span class="title">${cat.nome}</span><div class="balance">€ ${getCatBal(cat.id).toFixed(2)}</div></div>`;
             });
         }
         localStorage.setItem('myCashDB', JSON.stringify(db));
     }
 
-    function openConto(id) { selectedConto = id; currentView = 'macros'; render(); }
-    function openMacro(id) { selectedMacro = id; currentView = 'categories'; render(); }
+    function openConto(id) { selectedContoId = id; currentView = 'macros'; render(); }
+    function openMacro(id) { selectedMacroId = id; currentView = 'categories'; render(); }
     function goBack() {
         if(currentView === 'categories') currentView = 'macros';
         else if(currentView === 'macros') currentView = 'conti';
         render();
     }
 
-    // GESTIONE MODAL E TRANSAZIONI
-    function openModal() {
+    // --- GESTIONE MODALI ---
+    function showActionSheet() {
+        const btnLabel = document.getElementById('btn-create-label');
+        if(currentView === 'conti') btnLabel.innerText = "➕ Crea Nuovo Conto";
+        else if(currentView === 'macros') btnLabel.innerText = "➕ Crea Macrocategoria";
+        else btnLabel.innerText = "➕ Crea Categoria";
+        document.getElementById('modal-actions').style.display = 'flex';
+    }
+
+    function closeModals() { 
+        document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); 
+    }
+
+    function openCreateModal() {
+        closeModals();
+        document.getElementById('modal-create').style.display = 'flex';
+    }
+
+    function saveNewItem() {
+        const nome = document.getElementById('new-name').value;
+        if(!nome) return;
+        const id = Date.now();
+
+        if(currentView === 'conti') db.conti.push({id, nome});
+        else if(currentView === 'macros') db.macros.push({id, nome, contoId: selectedContoId});
+        else if(currentView === 'categories') db.categories.push({id, nome, macroId: selectedMacroId});
+
+        document.getElementById('new-name').value = '';
+        closeModals();
+        render();
+    }
+
+    function openTransactionModal() {
+        closeModals();
         const select = document.getElementById('tr-category');
         select.innerHTML = '';
-        
-        // Popola la lista delle categorie
         db.categories.forEach(cat => {
-            const macro = db.macros.find(m => m.id === cat.macroId);
-            const conto = db.conti.find(c => c.id === macro.contoId);
-            select.innerHTML += `<option value="${cat.id}">${conto.nome} > ${cat.nome}</option>`;
+            const m = db.macros.find(ma => ma.id === cat.macroId);
+            const c = db.conti.find(co => co.id === m.contoId);
+            select.innerHTML += `<option value="${cat.id}">${c.nome} > ${cat.nome}</option>`;
         });
-
         document.getElementById('modal-transazione').style.display = 'flex';
     }
 
-    function closeModal() { document.getElementById('modal-transazione').style.display = 'none'; }
-
     function saveTransaction() {
         const amount = parseFloat(document.getElementById('tr-amount').value);
-        const desc = document.getElementById('tr-desc').value;
         const catId = parseInt(document.getElementById('tr-category').value);
+        if(!amount || !catId) return alert("Dati mancanti!");
 
-        if(!amount || !catId) return alert("Inserisci almeno l'importo!");
-
-        db.transactions.push({
-            id: Date.now(),
-            catId: catId,
-            amount: amount,
-            desc: desc,
-            date: new Date().toISOString()
-        });
-
-        closeModal();
+        db.transactions.push({ id: Date.now(), catId, amount, desc: document.getElementById('tr-desc').value, date: new Date() });
+        document.getElementById('tr-amount').value = '';
+        document.getElementById('tr-desc').value = '';
+        closeModals();
         render();
     }
 </script>

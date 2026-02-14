@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>My Cash Stuffing</title>
+    <link rel="manifest" href="manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FDFBFB;
+            --rosa: #FFD1DC;
+            --lavanda: #E6E6FA;
+            --menta: #C8E6C9;
+            --azzurro: #B3E5FC;
+            --text: #5D5D5D;
+            --radius: 28px;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        h2 { font-weight: 700; margin-top: 25px; color: #A0A0A0; }
+
+        /* Griglia a due colonne */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        /* Stile Chubby Chic per le card */
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.04);
+            border: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: transform 0.1s;
+        }
+
+        .card:active { transform: scale(0.96); }
+        
+        .card-conto { background-color: var(--azzurro); }
+        .card-macro { background-color: var(--lavanda); }
+        .card-cat { background-color: var(--rosa); }
+
+        .label { font-size: 0.9rem; opacity: 0.8; }
+        .amount { font-size: 1.3rem; font-weight: 700; margin-top: 5px; }
+
+        /* Bottone inserimento rapido */
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 25px;
+            width: 70px;
+            height: 70px;
+            background: var(--menta);
+            border-radius: 50%;
+            border: none;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            color: white;
+            font-size: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Schermata Login */
+        #login-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--lavanda);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        input {
+            width: 80%;
+            padding: 18px;
+            margin: 10px;
+            border-radius: var(--radius);
+            border: 2px solid white;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .btn-login {
+            background: white;
+            padding: 15px 40px;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 700;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <h1 style="color: white; margin-bottom: 30px;">Cash Stuffing 🌸</h1>
+        <input type="password" id="pass-input" placeholder="Password (12345)">
+        <button class="btn-login" onclick="checkLogin()">Entra</button>
+    </div>
+
+    <main id="app-content" style="display:none;">
+        <header>
+            <h1 id="user-greeting">Ciao! 👋</h1>
+            <p>Ecco la situazione dei tuoi soldi:</p>
+        </header>
+
+        <section>
+            <h2>I tuoi Conti</h2>
+            <div class="grid" id="conti-list">
+                </div>
+        </section>
+
+        <section>
+            <h2>Categorie</h2>
+            <div class="grid" id="cat-list">
+                </div>
+        </section>
+
+        <button class="fab" onclick="aggiungiTransazione()">+</button>
+    </main>
+
+    <script>
+        // DATI DI ESEMPIO (Se non c'è nulla in memoria)
+        let data = JSON.parse(localStorage.getItem('myCashData')) || {
+            conti: [
+                { id: 1, nome: "ING Corrente", saldo: 1200 },
+                { id: 2, nome: "Contanti", saldo: 50 }
+            ],
+            categorie: [
+                { id: 1, nome: "Spesa", saldo: -150, contoId: 1 },
+                { id: 2, nome: "Regali", saldo: 200, contoId: 2 }
+            ]
+        };
+
+        // FUNZIONE PER IL LOGIN
+        function checkLogin() {
+            const p = document.getElementById('pass-input').value;
+            if(p === '12345') {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('app-content').style.display = 'block';
+                renderApp();
+            } else {
+                alert("Password sbagliata! Prova 12345");
+            }
+        }
+
+        // FUNZIONE PER DISEGNARE L'APP
+        function renderApp() {
+            const contiDiv = document.getElementById('conti-list');
+            const catDiv = document.getElementById('cat-list');
+            
+            contiDiv.innerHTML = '';
+            catDiv.innerHTML = '';
+
+            data.conti.forEach(c => {
+                contiDiv.innerHTML += `
+                    <div class="card card-conto">
+                        <span class="label">${c.nome}</span>
+                        <span class="amount">€ ${c.saldo.toFixed(2)}</span>
+                    </div>
+                `;
+            });
+
+            data.categorie.forEach(cat => {
+                catDiv.innerHTML += `
+                    <div class="card card-cat">
+                        <span class="label">${cat.nome}</span>
+                        <span class="amount">€ ${cat.saldo.toFixed(2)}</span>
+                    </div>
+                `;
+            });
+
+            // Salva ogni volta che cambia qualcosa
+            localStorage.setItem('myCashData', JSON.stringify(data));
+        }
+
+        function aggiungiTransazione() {
+            let importo = prompt("Quanto hai speso? (usa il meno per le uscite, es: -20)");
+            if (importo) {
+                // Per ora lo sottraiamo dal primo conto per prova
+                data.conti[0].saldo += parseFloat(importo);
+                renderApp();
+            }
+        }
+    </script>
+</body>
+</html>
